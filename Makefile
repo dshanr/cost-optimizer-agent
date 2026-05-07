@@ -1,4 +1,4 @@
-.PHONY: install test test-live eval lint format check clean run demo
+.PHONY: install test test-live eval lint format check clean run demo langfuse langfuse-down
 
 install:
 	uv sync --extra dev
@@ -29,3 +29,10 @@ demo:
 
 clean:
 	rm -rf .venv .pytest_cache .mypy_cache .ruff_cache dist build *.egg-info
+
+langfuse:
+	docker compose up -d
+	@echo "Langfuse: http://localhost:3000  (dev@local / dev-password)"
+
+langfuse-down:
+	docker compose down

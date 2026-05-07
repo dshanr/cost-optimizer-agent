@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - langfuse_postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  langfuse:
+    image: langfuse/langfuse:2
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/postgres
+      NEXTAUTH_SECRET: dev-secret-change-me
+      SALT: dev-salt-change-me
+      NEXTAUTH_URL: http://localhost:3000
+      TELEMETRY_ENABLED: "false"
+      LANGFUSE_INIT_ORG_ID: cost-optimizer
+      LANGFUSE_INIT_ORG_NAME: "Cost Optimizer"
+      LANGFUSE_INIT_PROJECT_ID: cost-optimizer-v1
+      LANGFUSE_INIT_PROJECT_NAME: "Cost Optimizer v1"
+      LANGFUSE_INIT_USER_EMAIL: dev@local
+      LANGFUSE_INIT_USER_PASSWORD: dev-password
+    ports:
+      - "3000:3000"
+
+volumes:
+  langfuse_postgres_data:

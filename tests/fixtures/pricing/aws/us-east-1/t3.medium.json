@@ -1,0 +1,11 @@
+{
+  "instance_type": "t3.medium",
+  "region": "us-east-1",
+  "operating_system": "Linux",
+  "tenancy": "Shared",
+  "on_demand_usd_per_hour": 0.0416,
+  "ri_1y_no_upfront_usd_per_hour": 0.0260,
+  "ri_3y_no_upfront_usd_per_hour": 0.0175,
+  "savings_plan_1y_usd_per_hour": 0.0274,
+  "savings_plan_3y_usd_per_hour": 0.0187
+}

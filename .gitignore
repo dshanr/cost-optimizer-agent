@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+dist/
+build/
+*.egg-info/
+.env
+runs/
+evals/reports/*.md
+evals/reports/*.json
+!evals/reports/.gitkeep
+.streamlit/secrets.toml

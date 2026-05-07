@@ -21,6 +21,7 @@ from cost_optimizer.models import (
     ToolResult,
     UtilizationStats,
 )
+from cost_optimizer.observability.base import Tracer, TraceHandle
 from cost_optimizer.tools.idle import check_idle_signals
 from cost_optimizer.tools.pricing import get_aws_pricing
 from cost_optimizer.tools.rightsizing import get_rightsizing_options
@@ -47,13 +48,22 @@ class Agent:
         *,
         max_tool_calls: int = MAX_TOOL_CALLS,
         trace_id_factory: Callable[[], str] | None = None,
+        tracer: Tracer | None = None,
     ) -> None:
         self.llm = llm
         self.max_tool_calls = max_tool_calls
         self._trace_id_factory = trace_id_factory or (lambda: f"trace-{uuid4().hex[:12]}")
+        self.tracer = tracer
 
     def run(self, resource: ResourceSummary) -> list[Recommendation]:
-        trace_id = self._trace_id_factory()
+        if self.tracer is not None:
+            handle: TraceHandle | None = self.tracer.start_trace(
+                resource_id=resource.resource_id
+            )
+            trace_id = handle.trace_id
+        else:
+            handle = None
+            trace_id = self._trace_id_factory()
         history: list[Message] = [
             Message(role="system", content=SYSTEM_PROMPT),
             Message(role="user", content=resource.model_dump_json()),
@@ -65,11 +75,23 @@ class Agent:
 
         while True:
             resp = self.llm.complete(history, tools=[])
+            if handle is not None and self.tracer is not None:
+                self.tracer.record_llm_call(
+                    handle, prompt="", response="", tokens=0, latency_ms=0.0
+                )
 
             if resp.finish_reason == "tool_use" and resp.tool_calls:
                 if tool_calls_made >= self.max_tool_calls:
+                    if handle is not None and self.tracer is not None:
+                        self.tracer.end_trace(handle, recommendations=[], cost_usd=0.0)
                     return []
                 results = self._execute_tools(resp.tool_calls, resource)
+                if handle is not None and self.tracer is not None:
+                    for tc, tr in zip(resp.tool_calls, results, strict=True):
+                        self.tracer.record_tool_call(
+                            handle, tool=tc.name, input=tc.arguments,
+                            output=tr.output, latency_ms=0.0,
+                        )
                 tool_calls_made += len(resp.tool_calls)
                 # Fold utilization tool results back into the resource so subsequent
                 # LLM turns see the augmented resource state.
@@ -98,6 +120,8 @@ class Agent:
                 continue
 
             # After retry, any rec still in `unsupported` is dropped silently.
+            if handle is not None and self.tracer is not None:
+                self.tracer.end_trace(handle, recommendations=valid, cost_usd=0.0)
             return valid
 
     def _execute_tools(

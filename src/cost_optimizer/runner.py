@@ -8,6 +8,7 @@ from cost_optimizer.agent import Agent
 from cost_optimizer.ingest.aggregate import top_n_by_cost
 from cost_optimizer.llm.base import LLM
 from cost_optimizer.models import Recommendation
+from cost_optimizer.observability.base import Tracer
 from cost_optimizer.providers.base import BillingProvider
 
 
@@ -20,16 +21,23 @@ class RunResult:
 
 
 class Runner:
-    def __init__(self, provider: BillingProvider, llm: LLM) -> None:
+    def __init__(
+        self,
+        provider: BillingProvider,
+        llm: LLM,
+        *,
+        tracer: Tracer | None = None,
+    ) -> None:
         self.provider = provider
         self.llm = llm
+        self.tracer = tracer
 
     def run(self, csv_path: Path, *, top_n: int = 50) -> RunResult:
         items = self.provider.parse_csv(Path(csv_path))
         summaries = self.provider.aggregate(items)
         candidates = top_n_by_cost(summaries, n=top_n)
 
-        agent = Agent(llm=self.llm)
+        agent = Agent(llm=self.llm, tracer=self.tracer)
         result = RunResult()
         for r in candidates:
             try:

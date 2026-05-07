@@ -128,8 +128,8 @@ def _rightsize_rec(r: ResourceSummary, cpu_p95: float) -> Recommendation:
         risk_level="medium",
         reasoning=(
             f"Instance shows CPU p95 of {cpu_p95}% over 30 days. "
-            f"A {new_type} provides sufficient headroom while reducing cost by "
-            f"{round((1 - new_rate / old_rate) * 100, 1)}%."
+            f"A {new_type} provides sufficient headroom; current rate is "
+            f"${old_rate}/hour and target rate is ${new_rate}/hour."
         ),
         evidence=[
             Evidence(

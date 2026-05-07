@@ -36,6 +36,7 @@ packages = ["src/cost_optimizer"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
 addopts = "-ra -q --strict-markers"
 markers = [
     "live: marks tests that hit live APIs (deselect with '-m \"not live\"')",

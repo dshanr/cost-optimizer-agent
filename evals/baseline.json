@@ -1,0 +1,5 @@
+{
+  "precision": 0.85,
+  "recall": 0.80,
+  "negative_pass_rate": 0.95
+}

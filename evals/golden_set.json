@@ -1,0 +1,117 @@
+{
+  "version": "0.1.0",
+  "cases": [
+    {
+      "case_id": "aws-rightsize-001",
+      "description": "t3.xlarge with low p95 CPU should rightsize to t3.medium",
+      "input_resource": {
+        "resource_id": "i-under-001",
+        "provider": "aws",
+        "service": "EC2",
+        "resource_type": "t3.xlarge",
+        "region": "us-east-1",
+        "monthly_cost_usd": 121.18,
+        "usage_hours": 720.0,
+        "utilization": null,
+        "tags": {"Env": "prod"}
+      },
+      "expected_recommendations": [
+        {
+          "type": "rightsize",
+          "recommended_instance_type": "t3.medium",
+          "min_monthly_savings_usd": 60.0,
+          "min_confidence": 0.7,
+          "max_risk_level": "medium"
+        }
+      ],
+      "negative_assertions": ["terminate_idle"]
+    },
+    {
+      "case_id": "aws-idle-001",
+      "description": "Orphan EBS volume should be flagged as terminate_idle",
+      "input_resource": {
+        "resource_id": "vol-0orphan001",
+        "provider": "aws",
+        "service": "EC2",
+        "resource_type": null,
+        "region": "us-east-1",
+        "monthly_cost_usd": 8.00,
+        "usage_hours": 720.0,
+        "utilization": null,
+        "tags": {}
+      },
+      "expected_recommendations": [
+        {
+          "type": "terminate_idle",
+          "min_monthly_savings_usd": 5.0,
+          "min_confidence": 0.7,
+          "max_risk_level": "low"
+        }
+      ],
+      "negative_assertions": ["rightsize", "purchase_commitment"]
+    },
+    {
+      "case_id": "aws-commitment-001",
+      "description": "Steady-state m5.large 24/7 should suggest commitment (v1: MockLLM does not yet emit; v2 fills in)",
+      "input_resource": {
+        "resource_id": "i-steady-001",
+        "provider": "aws",
+        "service": "EC2",
+        "resource_type": "m5.large",
+        "region": "us-east-1",
+        "monthly_cost_usd": 70.08,
+        "usage_hours": 720.0,
+        "utilization": {
+          "cpu_p50": 45.0, "cpu_p95": 65.0,
+          "memory_p50": 50.0, "memory_p95": 60.0,
+          "network_in_gb_per_day": 5.0, "network_out_gb_per_day": 3.0,
+          "measurement_window_days": 30,
+          "data_source": "mocked"
+        },
+        "tags": {"Env": "prod"}
+      },
+      "expected_recommendations": [],
+      "negative_assertions": ["terminate_idle"]
+    },
+    {
+      "case_id": "aws-storage-001",
+      "description": "Cold S3 bucket should suggest tier transition (v1: out of MockLLM scope, expect 0 recs)",
+      "input_resource": {
+        "resource_id": "archive-bucket",
+        "provider": "aws",
+        "service": "S3",
+        "resource_type": null,
+        "region": "us-east-1",
+        "monthly_cost_usd": 46.00,
+        "usage_hours": 0.0,
+        "utilization": null,
+        "tags": {}
+      },
+      "expected_recommendations": [],
+      "negative_assertions": ["rightsize", "terminate_idle"]
+    },
+    {
+      "case_id": "aws-negative-001",
+      "description": "Well-utilized t3.medium should yield no recommendations",
+      "input_resource": {
+        "resource_id": "i-busy-001",
+        "provider": "aws",
+        "service": "EC2",
+        "resource_type": "t3.medium",
+        "region": "us-east-1",
+        "monthly_cost_usd": 30.30,
+        "usage_hours": 720.0,
+        "utilization": {
+          "cpu_p50": 65.0, "cpu_p95": 78.0,
+          "memory_p50": 60.0, "memory_p95": 70.0,
+          "network_in_gb_per_day": 4.0, "network_out_gb_per_day": 2.0,
+          "measurement_window_days": 30,
+          "data_source": "mocked"
+        },
+        "tags": {"Env": "prod"}
+      },
+      "expected_recommendations": [],
+      "negative_assertions": ["rightsize", "terminate_idle"]
+    }
+  ]
+}

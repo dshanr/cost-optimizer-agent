@@ -112,6 +112,14 @@ def test_recommendation_id_must_be_uuid4():
         Recommendation(**base, confidence=0.8)
 
 
+def test_recommendation_id_must_be_v4_specifically():
+    """A valid UUID1 must be rejected — only UUID4 is accepted."""
+    base = _recommendation_kwargs()
+    base["recommendation_id"] = "00000000-0000-1000-8000-000000000000"  # UUID1 shape
+    with pytest.raises(ValidationError):
+        Recommendation(**base, confidence=0.8)
+
+
 def test_recommendation_type_enum_values():
     assert RecommendationType.RIGHTSIZE.value == "rightsize"
     assert RecommendationType.TERMINATE_IDLE.value == "terminate_idle"

@@ -104,7 +104,9 @@ class Recommendation(BaseModel):
     @field_validator("recommendation_id")
     @classmethod
     def _uuid4(cls, v: str) -> str:
-        UUID(v, version=4)  # raises ValueError on invalid
+        parsed = UUID(v)  # raises ValueError if not a valid UUID at all
+        if parsed.version != 4:
+            raise ValueError(f"recommendation_id must be a UUID4, got UUID{parsed.version}: {v}")
         return v
 
     @model_validator(mode="after")
@@ -139,7 +141,7 @@ class LLMResponse(BaseModel):
     """A single LLM completion: either tool calls to execute or final recommendations."""
     model_config = ConfigDict(extra="forbid")
 
-    tool_calls: list["ToolCall"] = Field(default_factory=list)
+    tool_calls: list[ToolCall] = Field(default_factory=list)
     recommendations: list[Recommendation] = Field(default_factory=list)
     finish_reason: Literal["tool_use", "stop"] = "stop"
     raw_text: str | None = None
@@ -153,6 +155,3 @@ class Message(BaseModel):
     content: str | None = None
     tool_calls: list[ToolCall] = Field(default_factory=list)
     tool_results: list[ToolResult] = Field(default_factory=list)
-
-
-LLMResponse.model_rebuild()

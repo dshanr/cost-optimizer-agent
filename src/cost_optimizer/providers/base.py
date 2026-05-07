@@ -1,8 +1,9 @@
 """BillingProvider Protocol: the contract any provider must satisfy."""
 from __future__ import annotations
 
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable, Protocol
+from typing import Protocol
 
 from cost_optimizer.models import BillingLineItem, ResourceSummary
 

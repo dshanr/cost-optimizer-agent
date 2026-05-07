@@ -1,7 +1,7 @@
 """Aggregator tests."""
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from cost_optimizer.ingest.aggregate import aggregate, top_n_by_cost
@@ -18,8 +18,8 @@ def _item(rid: str | None, cost: float, hours: float = 720, service: str = "EC2"
         resource_id=rid,
         resource_type=rtype,
         region="us-east-1",
-        usage_start=datetime(2026, 4, 1, tzinfo=timezone.utc),
-        usage_end=datetime(2026, 4, 30, tzinfo=timezone.utc),
+        usage_start=datetime(2026, 4, 1, tzinfo=UTC),
+        usage_end=datetime(2026, 4, 30, tzinfo=UTC),
         usage_amount=hours,
         usage_unit="Hrs",
         unblended_cost_usd=cost,

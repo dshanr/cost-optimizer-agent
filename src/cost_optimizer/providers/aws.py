@@ -1,8 +1,8 @@
 """AWS billing provider."""
 from __future__ import annotations
 
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable
 
 from cost_optimizer.ingest.aggregate import aggregate as _aggregate
 from cost_optimizer.ingest.aws_cur import parse_aws_cur

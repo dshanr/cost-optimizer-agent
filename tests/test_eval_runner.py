@@ -27,7 +27,7 @@ def test_eval_meets_thresholds():
 
 
 def test_eval_emits_markdown(tmp_path: Path):
-    report = run_eval(llm=MockLLM(), output_dir=tmp_path)
+    run_eval(llm=MockLLM(), output_dir=tmp_path)
     files = list(tmp_path.glob("*.md"))
     assert len(files) >= 1
     body = files[0].read_text()

@@ -6,7 +6,7 @@ results have been observed in the history).
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 from uuid import uuid4
 
@@ -153,7 +153,7 @@ def _rightsize_rec(r: ResourceSummary, cpu_p95: float) -> Recommendation:
         ],
         prerequisites=["Verify application memory ceiling via load testing"],
         rollback_plan=f"Stop instance, change type back to {r.resource_type}, start instance.",
-        generated_at=datetime.now(timezone.utc),
+        generated_at=datetime.now(UTC),
         agent_version=AGENT_VERSION,
         trace_id=None,
     )
@@ -204,7 +204,7 @@ def _terminate_idle_rec(r: ResourceSummary, *, reason: str,
         evidence=evidence,
         prerequisites=["Confirm resource is not pinned by ops team"],
         rollback_plan="Restore from snapshot if available.",
-        generated_at=datetime.now(timezone.utc),
+        generated_at=datetime.now(UTC),
         agent_version=AGENT_VERSION,
         trace_id=None,
     )

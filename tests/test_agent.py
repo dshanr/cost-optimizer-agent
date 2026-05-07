@@ -1,13 +1,14 @@
 """Agent integration tests against MockLLM and the five golden scenarios."""
 from __future__ import annotations
 
+from datetime import UTC
+
 import pytest
 
-from cost_optimizer.agent import Agent, MAX_TOOL_CALLS
+from cost_optimizer.agent import Agent
 from cost_optimizer.llm.mock import MockLLM
 from cost_optimizer.models import (
     LLMResponse,
-    Message,
     Recommendation,
     RecommendationType,
     ResourceSummary,
@@ -107,7 +108,7 @@ class _BadEvidenceLLM:
     _calls = 0
 
     def complete(self, messages, tools):
-        from datetime import datetime, timezone
+        from datetime import datetime
         from uuid import uuid4
 
         from cost_optimizer.models import Evidence
@@ -124,6 +125,6 @@ class _BadEvidenceLLM:
             reasoning="CPU p95 is 14% — clear win.",  # not in evidence
             evidence=[Evidence(description="other", source="utilization", data={"value": 99.0})],
             prerequisites=[], rollback_plan=None,
-            generated_at=datetime.now(timezone.utc), agent_version="0.1.0", trace_id=None,
+            generated_at=datetime.now(UTC), agent_version="0.1.0", trace_id=None,
         )
         return LLMResponse(recommendations=[rec], finish_reason="stop")

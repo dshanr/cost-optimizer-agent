@@ -1,8 +1,6 @@
 """Utilization tool tests."""
 from __future__ import annotations
 
-import pytest
-
 from cost_optimizer.models import UtilizationStats
 from cost_optimizer.tools.utilization import get_utilization_stats
 

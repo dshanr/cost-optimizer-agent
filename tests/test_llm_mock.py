@@ -1,14 +1,10 @@
 """MockLLM tests."""
 from __future__ import annotations
 
-from datetime import datetime, timezone
-from uuid import uuid4
-
 from cost_optimizer.llm.mock import MockLLM
 from cost_optimizer.models import (
     LLMResponse,
     Message,
-    Recommendation,
     RecommendationType,
     ResourceSummary,
     UtilizationStats,

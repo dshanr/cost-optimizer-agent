@@ -1,7 +1,7 @@
 """Evidence validator tests."""
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import uuid4
 
 from cost_optimizer.evidence_validator import validate_recommendation
@@ -26,7 +26,7 @@ def _rec(reasoning: str, evidence: list[Evidence] | None = None) -> Recommendati
         evidence=evidence or [],
         prerequisites=[],
         rollback_plan=None,
-        generated_at=datetime.now(timezone.utc),
+        generated_at=datetime.now(UTC),
         agent_version="0.1.0",
         trace_id=None,
     )

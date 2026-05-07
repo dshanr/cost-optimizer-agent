@@ -20,9 +20,9 @@ def _main() -> None:
 
 @app.command()
 def run(
-    csv_path: Path = typer.Argument(..., exists=True, readable=True),
-    top_n: int = typer.Option(50, "--top-n", min=1),
-    llm: str = typer.Option("mock", "--llm", help="mock | claude"),
+    csv_path: Path = typer.Argument(..., exists=True, readable=True),  # noqa: B008
+    top_n: int = typer.Option(50, "--top-n", min=1),  # noqa: B008
+    llm: str = typer.Option("mock", "--llm", help="mock | claude"),  # noqa: B008
 ) -> None:
     """Run the agent against a billing CSV and emit recommendations as JSONL."""
     llm_impl = _build_llm(llm)

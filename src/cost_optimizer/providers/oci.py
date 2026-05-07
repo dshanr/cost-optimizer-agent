@@ -5,8 +5,8 @@ in the type checker, even if only AWS works at runtime.
 """
 from __future__ import annotations
 
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable
 
 from cost_optimizer.models import BillingLineItem, ResourceSummary
 

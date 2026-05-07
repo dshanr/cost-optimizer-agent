@@ -7,8 +7,8 @@ For each resource the agent loops:
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable
 from uuid import uuid4
 
 from cost_optimizer.evidence_validator import validate_recommendation
@@ -21,7 +21,7 @@ from cost_optimizer.models import (
     ToolResult,
     UtilizationStats,
 )
-from cost_optimizer.observability.base import Tracer, TraceHandle
+from cost_optimizer.observability.base import TraceHandle, Tracer
 from cost_optimizer.tools.idle import check_idle_signals
 from cost_optimizer.tools.pricing import get_aws_pricing
 from cost_optimizer.tools.rightsizing import get_rightsizing_options

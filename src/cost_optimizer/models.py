@@ -57,7 +57,7 @@ class ResourceSummary(BaseModel):
     tags: dict[str, str] = Field(default_factory=dict)
 
 
-class RecommendationType(str, Enum):
+class RecommendationType(str, Enum):  # noqa: UP042
     RIGHTSIZE = "rightsize"
     TERMINATE_IDLE = "terminate_idle"
     PURCHASE_COMMITMENT = "purchase_commitment"
@@ -110,7 +110,7 @@ class Recommendation(BaseModel):
         return v
 
     @model_validator(mode="after")
-    def _savings_consistency(self) -> "Recommendation":
+    def _savings_consistency(self) -> Recommendation:
         expected = self.monthly_savings_usd * 12
         if abs(self.annual_savings_usd - expected) > 1.0:
             raise ValueError(

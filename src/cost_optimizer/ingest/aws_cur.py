@@ -9,7 +9,6 @@ from pydantic import ValidationError
 
 from cost_optimizer.models import BillingLineItem
 
-
 REQUIRED_COLUMNS = (
     "identity/LineItemId",
     "lineItem/UsageStartDate",

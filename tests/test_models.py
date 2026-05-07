@@ -1,7 +1,7 @@
 """Pydantic model contract tests."""
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import uuid4
 
 import pytest
@@ -18,7 +18,7 @@ from cost_optimizer.models import (
 
 
 def _now() -> datetime:
-    return datetime(2026, 5, 6, 12, 0, tzinfo=timezone.utc)
+    return datetime(2026, 5, 6, 12, 0, tzinfo=UTC)
 
 
 def test_billing_line_item_round_trip():

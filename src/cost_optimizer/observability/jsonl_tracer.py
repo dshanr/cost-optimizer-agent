@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 from uuid import uuid4
@@ -14,7 +14,7 @@ class JsonlTracer:
     def __init__(self, output_dir: Path) -> None:
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
-        ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S")
+        ts = datetime.now(UTC).strftime("%Y%m%dT%H%M%S")
         self.path = self.output_dir / f"trace-{ts}-{uuid4().hex[:6]}.jsonl"
 
     def start_trace(self, *, resource_id: str) -> TraceHandle:
@@ -34,7 +34,7 @@ class JsonlTracer:
             "llm_calls": handle.llm_calls,
             "recommendations": len(recommendations),
             "cost_usd": cost_usd,
-            "ts": datetime.now(timezone.utc).isoformat(),
+            "ts": datetime.now(UTC).isoformat(),
         }
         with self.path.open("a") as f:
             f.write(json.dumps(payload) + "\n")

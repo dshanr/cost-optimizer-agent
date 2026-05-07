@@ -1,0 +1,22 @@
+{
+  "t3": [
+    {"instance_type": "t3.nano", "vcpu": 2, "memory_gib": 0.5},
+    {"instance_type": "t3.micro", "vcpu": 2, "memory_gib": 1},
+    {"instance_type": "t3.small", "vcpu": 2, "memory_gib": 2},
+    {"instance_type": "t3.medium", "vcpu": 2, "memory_gib": 4},
+    {"instance_type": "t3.large", "vcpu": 2, "memory_gib": 8},
+    {"instance_type": "t3.xlarge", "vcpu": 4, "memory_gib": 16},
+    {"instance_type": "t3.2xlarge", "vcpu": 8, "memory_gib": 32}
+  ],
+  "m5": [
+    {"instance_type": "m5.large", "vcpu": 2, "memory_gib": 8},
+    {"instance_type": "m5.xlarge", "vcpu": 4, "memory_gib": 16},
+    {"instance_type": "m5.2xlarge", "vcpu": 8, "memory_gib": 32},
+    {"instance_type": "m5.4xlarge", "vcpu": 16, "memory_gib": 64}
+  ],
+  "c5": [
+    {"instance_type": "c5.large", "vcpu": 2, "memory_gib": 4},
+    {"instance_type": "c5.xlarge", "vcpu": 4, "memory_gib": 8},
+    {"instance_type": "c5.2xlarge", "vcpu": 8, "memory_gib": 16}
+  ]
+}
